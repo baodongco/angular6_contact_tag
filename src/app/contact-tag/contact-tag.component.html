@@ -1,0 +1,39 @@
+<div class="contact-tag">
+  <div *ngFor="let contactTag of contactTag$">
+    <div *ngIf="contactTag['visible']">
+    <a [routerLink]="" (click)="openContact($even, contactTag)">
+      <div class="contactTag-item">
+        <div class="row">
+          <div class="col-10">
+            <h3>{{contactTag.name}}</h3>
+            <p>{{contactTag.description}}</p>
+            <ng-container *ngFor="let tag of contactTag.tag">
+              <div class="contactTag-tag" *ngIf="tag.has === true">
+                <p>{{tag.name}}</p>
+              </div>
+            </ng-container>
+          </div>
+          <div class="dropdown col-2">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+              TAGS V
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+              <div *ngFor="let tag of contactTag.tag" class="dropdown-item">
+                <div>
+                  <span>[</span>
+                  <span *ngIf="tag.has === true">X</span>
+                  <span *ngIf="tag.has === false">{{" "}}</span>
+                  <span>] {{tag.name}}</span>
+                </div>
+              </div>
+              <div class="dropdown-divider"></div>
+              <input type="text" class="dropdown-item" placeholder="Add Tag and press Enter">
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+  </div>
+</div>

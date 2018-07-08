@@ -1,0 +1,22 @@
+.search-box {
+  border: 1px solid black;
+  margin: 10px;
+  padding: 10px;
+  color: black;
+  .search-box-input {
+    padding-left: 26px;
+    input {
+        padding-left: 10px;
+    }
+  }
+  .search-box-icon-update {
+    display: inline-block;
+    border: 1px solid black;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: black;
+    p {
+        margin: 0;
+    }
+  }
+}

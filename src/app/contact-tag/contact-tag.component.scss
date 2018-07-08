@@ -1,0 +1,30 @@
+.contact-tag {
+  border: 1px solid black;
+  margin: 10px;
+  padding: 10px;
+  color: black;
+  .contactTag-tag {
+    p {
+      margin: auto;
+    }
+  }
+  a {
+    text-decoration: none;
+  }
+  .contactTag-item {
+    border: 1px solid black;
+    margin: 10px;
+    padding: 10px;
+    color: black;
+    .contactTag-tag {
+      border: 1px solid black;
+      display: inline-block;
+      margin: 5px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    .dropdown-menu {
+        min-width: 15rem;
+    }
+  }
+}
