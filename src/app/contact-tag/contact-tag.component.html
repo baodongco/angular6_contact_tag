@@ -1,39 +1,53 @@
 <div class="contact-tag">
   <div *ngFor="let contactTag of contactTag$">
     <div *ngIf="contactTag['visible']">
-    <a [routerLink]="" (click)="openContact($even, contactTag)">
-      <div class="contactTag-item">
-        <div class="row">
-          <div class="col-10">
-            <h3>{{contactTag.name}}</h3>
-            <p>{{contactTag.description}}</p>
-            <ng-container *ngFor="let tag of contactTag.tag">
-              <div class="contactTag-tag" *ngIf="tag.has === true">
-                <p>{{tag.name}}</p>
-              </div>
-            </ng-container>
-          </div>
-          <div class="dropdown col-2">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
-              aria-expanded="false">
-              TAGS V
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-              <div *ngFor="let tag of contactTag.tag" class="dropdown-item">
-                <div>
-                  <span>[</span>
-                  <span *ngIf="tag.has === true">X</span>
-                  <span *ngIf="tag.has === false">{{" "}}</span>
-                  <span>] {{tag.name}}</span>
+      <div [routerLink]="" (click)="openContact($even, contactTag)" class="each-contact-tag">
+        <div class="contactTag-item">
+          <div class="row">
+            <div class="col-10">
+              <h3>{{contactTag.name}}</h3>
+              <p>{{contactTag.description}}</p>
+              <ng-container *ngFor="let tag of contactTag.tag">
+                <div class="contactTag-tag" *ngIf="tag.has === true">
+                  <p>{{tag.name}}</p>
                 </div>
+              </ng-container>
+            </div>
+            <div class="dropdown col-2">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                TAGS V
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenu2" (click)="removePropagation($even)">
+                <div *ngFor="let tag of contactTag.tag" class="dropdown-item-text">
+                  <div class="row no-gutters">
+                    <div class="col-1 d-inline-block">
+                    <a [routerLink]="" (click)="updateTag($even, contactTag, tag)">
+                      <span >[</span>
+                      <span *ngIf="tag.has === true">X</span>
+                      <span *ngIf="tag.has === false">{{" "}}</span>
+                      <span>]</span>
+                    </a>
+                  </div>
+                  <div class="col-7">
+                    <label *ngIf="!editMode" [routerLink]=""> {{tag.name}}</label>
+                    <input [(ngModel)]="tag.name" id="changedName" type="text" value="{{tag.name}}" *ngIf="editMode">
+                  </div>
+                  <div class="col-4">
+                    <a  *ngIf="!editMode" [routerLink]="" (click)="switchEditMode($even, tag)">Edit</a>
+                    <a  *ngIf="editMode" [routerLink]="" (click)="changeTagName($event, tag, tag.name)">Save</a>
+                    /
+                    <a [routerLink]="" (click)="deleteTag($event, tag);">Delete</a>
+                  </div>
+                  </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <input type="text" class="dropdown-item" placeholder="Add Tag and press Enter" (keyup.enter)="addTag($event.target.value, contactTag.id, $event.target)">
               </div>
-              <div class="dropdown-divider"></div>
-              <input type="text" class="dropdown-item" placeholder="Add Tag and press Enter">
             </div>
           </div>
         </div>
       </div>
-    </a>
-  </div>
+    </div>
   </div>
 </div>

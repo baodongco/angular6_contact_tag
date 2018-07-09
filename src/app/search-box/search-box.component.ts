@@ -10,11 +10,17 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SearchBoxComponent implements OnInit {
 
-  contactTagSearch$: Object;
+  alerts = [];
+  tag$: any;
+  tagData = [];
+  newTagData$ = [];
+  show = true;
 
   constructor(private route: ActivatedRoute, private data: DataService) {
-    this.data.getContactTag().subscribe(contactTagData => this.contactTagSearch$ = contactTagData);
-   }
+    this.data.returnbehaviorTagData().subscribe(contactTagData => this.tag$ = JSON.parse(JSON.stringify(contactTagData)));
+    this.tagData = data.getTags();
+    this.data.getNewTagData().subscribe(newTagData => this.newTagData$ = newTagData);
+  }
 
   ngOnInit() {
   }
@@ -22,5 +28,4 @@ export class SearchBoxComponent implements OnInit {
   onSearchChange(searchString) {
     this.data.searchByString(searchString);
   }
-
 }

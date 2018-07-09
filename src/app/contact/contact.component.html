@@ -1,24 +1,40 @@
 <div class="contact">
-  <div class="container">
-  <h3>{{contact$.name}}</h3>
-</div>
+  <div class="row no-gutters">
+    <h3>{{contact$.name}}</h3>
+  </div>
   <br>
-  <div>
-    <div class="container-fluid">
-      <label for="Phone">Phone:</label>
-      <span>{{contact$.phone}}</span>
+  <div class="contact-detail">
+    <div class="row no-gutters">
+      <div class="col-3">
+        <label for="Phone">Phone:</label>
+      </div>
+      <div class="col-9">
+        <div>{{contact$.phone}}</div>
+      </div>
     </div>
-    <div  class="container-fluid">
-      <label for="Email">Email:</label>
-      <span>{{contact$.email}}</span>
+    <div class="row no-gutters">
+      <div class="col-3">
+        <label for="Email">Email:</label>
+      </div>
+      <div class="col-9">
+        <div>{{contact$.email}}</div>
+      </div>
     </div>
-    <div  class="container-fluid">
-      <label for="LinkedIn">LinkedIn:</label>
-      <span>{{contact$.linkedIn}}</span>
+    <div class="row no-gutters">
+      <div class="col-3">
+        <label for="LinkedIn">LinkedIn:</label>
+      </div>
+      <div class="col-9">
+        <div>{{contact$.linkedIn}}</div>
+      </div>
     </div>
-    <div  class="container-fluid">
-      <label for="Skype">Skype:</label>
-      <span>{{contact$.skype}}</span>
+    <div class="row no-gutters">
+      <div class="col-3">
+        <label for="Skype">Skype:</label>
+      </div>
+      <div class="col-9">
+        <div>{{contact$.skype}}</div>
+      </div>
     </div>
   </div>
 </div>

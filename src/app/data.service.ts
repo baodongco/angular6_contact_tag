@@ -285,6 +285,10 @@ export class DataService {
     {
       'id': 4,
       'name': 'Team Member'
+    },
+    {
+      'id': 5,
+      'name': 'Team Leader'
     }
   ];
 
@@ -321,12 +325,17 @@ export class DataService {
     }
   ];
 
+  tagIdIndex = 6;
+  contactTagIndex = 7;
   result = [];
+  currentNewTag = [];
   currentObject = this.ContactData$[0];
   currentContactTagObject = [];
+  currentTagObject = [];
   behaviorCurrentObject = new BehaviorSubject(this.ContactData$[0]);
   behaviorContactData = new BehaviorSubject([]);
-  behaviorSearchData = new BehaviorSubject([]);
+  behaviorTagData = new BehaviorSubject([]);
+  behaviorNewTagData = new BehaviorSubject([]);
 
   constructor() {
     this.initValue();
@@ -335,6 +344,12 @@ export class DataService {
     });
     this.behaviorContactData.subscribe(value =>
       this.currentContactTagObject = value
+    );
+    this.behaviorTagData.subscribe(value =>
+      this.currentTagObject = value
+    );
+    this.behaviorNewTagData.subscribe(value =>
+      this.currentNewTag = value
     );
   }
 
@@ -347,6 +362,10 @@ export class DataService {
 
   returnBehaviorCurrentObject() {
     return this.behaviorCurrentObject;
+  }
+
+  returnbehaviorTagData() {
+    return this.behaviorTagData;
   }
 
   getContacts() {
@@ -364,6 +383,29 @@ export class DataService {
         this.behaviorCurrentObject.next(this.currentObject);
       }
     });
+  }
+
+  updateContactTag(contactTag, tag) {
+    let index = -1;
+    if (tag.has) {
+      for (let i = 0; i < this.ContactTagData$.length; i++) {
+        // tslint:disable-next-line:max-line-length
+        if ((this.ContactTagData$[i].contactId.toString() === contactTag.id.toString()) && (this.ContactTagData$[i].tagId.toString() === tag.id.toString())) {
+          index = i;
+          break;
+        }
+      }
+      this.ContactTagData$.splice(index, 1);
+      this.getContactTag();
+    } else {
+      const tmpContactTag = {
+        'id': this.getContactTagIndex(),
+        'contactId': contactTag.id,
+        'tagId': tag.id
+      };
+      this.ContactTagData$.push(tmpContactTag);
+      this.getContactTag();
+    }
   }
 
   getContact(contactId) {
@@ -387,48 +429,29 @@ export class DataService {
     });
     this.currentContactTagObject = result;
     this.behaviorContactData.next(this.currentContactTagObject);
+    this.behaviorTagData.next(this.currentTagObject);
     return this.behaviorContactData;
   }
 
   getTagByContact(contactId) {
     const result = [];
     const tagId = [];
-    const tagData = this.TagData$;
-    if (this.ContactTagData$) {
-      this.ContactTagData$.forEach(element => {
-        if (element.contactId.toString() === contactId.toString()) {
-          tagId.push(element.tagId);
-        }
-      });
-      tagData.forEach(tag => {
-        tagId.forEach(id => {
-          if (id.toString() === tag.id.toString()) {
-            const tempTag = tag;
-            // tempTag['has'] = true;
-            // tag['has'] = true;
-            result.push(tempTag);
-          } else {
-            // tag['has'] = false;
-            // result.push(tag);
-          }
-        });
-        // if (!tag.hasOwnProperty('has')) {
-        //   console.log('zzzz');
-        //   tag['has'] = false;
-        //   result.push(tag);
-        // }
-      });
-      // tagData.forEach(tag => {
-      //   result.forEach(tagResult => {
+    const tagData = JSON.parse(JSON.stringify(this.TagData$));
 
-      //   });
-      //   if (!tag['has']) {
-      //     tag['has'] = false;
-      //   }
-      // });
-    }
-    console.log('result tag: ' + contactId + ' ket qua: ' + JSON.stringify(this.TagData$));
-    return result;
+    tagData.forEach(tag => {
+      tag['has'] = false;
+    });
+
+    this.ContactTagData$.forEach(contactTag => {
+      if (contactTag.contactId.toString() === contactId.toString()) {
+        for (let i = 0; i < tagData.length; i++) {
+          if (tagData[i].id.toString() === contactTag.tagId.toString()) {
+            tagData[i]['has'] = true;
+          }
+        }
+      }
+    });
+    return tagData;
   }
 
   searchByContactName(contactName) {
@@ -463,10 +486,88 @@ export class DataService {
         element['visible'] = false;
       }
       element.tag.forEach(tag => {
-        if (tag.name.toLowerCase().includes(searchString)) {
+        if (tag['has'] && tag.name.toLowerCase().includes(searchString)) {
           element['visible'] = true;
         }
       });
     });
+  }
+
+  addTag(tagName, contactId) {
+    let continueFlag = true;
+    this.TagData$.forEach(tag => {
+      if (tag.name.toLowerCase() === tagName.toLowerCase()) {
+        continueFlag = false;
+        return 'Error 1: Tag name is existing.';
+      }
+    });
+    if (continueFlag) {
+      const self = this;
+      const tmpTag = {
+        'id': self.getTagIdIndex(),
+        'name': tagName
+      };
+      self.TagData$.push(tmpTag);
+      this.currentNewTag.push(tmpTag);
+      this.behaviorNewTagData.next(this.currentNewTag);
+      // self.ContactTagData$.push({
+      //   'id': self.getContactTagIndex(),
+      //   'contactId': contactId,
+      //   'tagId': self.getTagIdIndex()
+      // });
+      this.getContactTag();
+    }
+  }
+
+  changeTag(name, changedTag) {
+    this.TagData$.forEach(tag => {
+      if (tag.id.toString() === changedTag.id.toString()) {
+        tag.name = changedTag.name;
+      }
+    });
+    this.getContactTag();
+  }
+
+  removeNewTag() {
+    this.currentNewTag.splice(0);
+    this.behaviorNewTagData.next(this.currentNewTag);
+  }
+
+  deleteTag(tag) {
+    let tmptIndex = -1;
+    const tmpIndexArr = [];
+    for (let i = 0; i < this.TagData$.length; i++) {
+      if (this.TagData$[i].id.toString() === tag.id.toString()) {
+        tmptIndex = i;
+        break;
+      }
+    }
+    this.TagData$.splice(tmptIndex, 1);
+    for (let i = 0; i < this.ContactTagData$.length; i++) {
+      if (this.ContactTagData$[i].tagId.toString() === tag.id.toString()) {
+        tmpIndexArr.push(i);
+      }
+    }
+    if (tmpIndexArr.length > 0) {
+      tmpIndexArr.forEach(index => {
+        this.ContactTagData$.splice(index, 1);
+      });
+    }
+    this.getContactTag();
+  }
+
+  getNewTagData() {
+    this.behaviorNewTagData.next(this.currentNewTag);
+    return this.behaviorNewTagData;
+  }
+
+  getContactTagIndex() {
+    return this.contactTagIndex;
+    this.contactTagIndex++;
+  }
+
+  getTagIdIndex() {
+    this.tagIdIndex++;
+    return this.tagIdIndex - 1;
   }
 }

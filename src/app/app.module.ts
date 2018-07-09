@@ -8,6 +8,7 @@ import { ContactComponent } from './contact/contact.component';
 import { ContactTagComponent } from './contact-tag/contact-tag.component';
 import { SearchBoxComponent } from './search-box/search-box.component';
 import { UsersComponent } from './users/users.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { UsersComponent } from './users/users.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
