@@ -332,10 +332,12 @@ export class DataService {
   currentObject = this.ContactData$[0];
   currentContactTagObject = [];
   currentTagObject = [];
+  searchDataObject = [];
   behaviorCurrentObject = new BehaviorSubject(this.ContactData$[0]);
   behaviorContactData = new BehaviorSubject([]);
   behaviorTagData = new BehaviorSubject([]);
   behaviorNewTagData = new BehaviorSubject([]);
+  behaviorSearchData = new BehaviorSubject([]);
 
   constructor() {
     this.initValue();
@@ -469,14 +471,6 @@ export class DataService {
     return result;
   }
 
-  searchByContactCompany(contactCompany) {
-    return;
-  }
-
-  searchByTag(tagName) {
-    return;
-  }
-
   searchByString(searchString) {
     searchString = searchString.toLowerCase();
     this.ContactData$.forEach(element => {
@@ -562,12 +556,42 @@ export class DataService {
   }
 
   getContactTagIndex() {
-    return this.contactTagIndex;
     this.contactTagIndex++;
+    return this.contactTagIndex - 1;
   }
 
   getTagIdIndex() {
     this.tagIdIndex++;
     return this.tagIdIndex - 1;
+  }
+
+  getSearcAutoCompletehData(searchString) {
+    this.ContactData$.forEach(contact => {
+      if (contact.name.includes(searchString)) {
+        this.searchDataObject.push(contact.name);
+      } else if (contact.company.name.includes(searchString)) {
+        this.searchDataObject.push(contact.company.name);
+      }
+    });
+    this.TagData$.forEach(tag => {
+      if (tag.name.includes(searchString)) {
+        this.searchDataObject.push(tag.name);
+      }
+    });
+    this.behaviorSearchData.next(this.searchDataObject);
+    return this.behaviorSearchData;
+  }
+
+  getSearchData() {
+    const result = [];
+    this.ContactData$.forEach(contact => {
+      result.push(contact.name);
+      result.push(contact.company.name);
+    });
+    this.TagData$.forEach(tag => {
+      result.push(tag.name);
+    });
+    this.behaviorSearchData.next(result);
+    return this.behaviorSearchData;
   }
 }
