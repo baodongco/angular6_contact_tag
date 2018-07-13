@@ -3,17 +3,16 @@
     <div class="col-9 search-box-input">
       <form class="example-form">
         <mat-form-field class="example-full-width">
-          <input type="text" placeholder="Seach by Name, Company or #Tag" class="w-100" 
-            matInput [formControl]="myControl" [matAutocomplete]="auto" autocomplete="disableAutocomplete">
+          <input matInput placeholder="Seach by Name, Company, #Tag name or press # to show list of tags" aria-label="State" [matAutocomplete]="auto" [formControl]="stateCtrl">
           <mat-autocomplete #auto="matAutocomplete">
-            <mat-option *ngFor="let tag of tagData | async" [value]="tag.name" (optionSelected)="onSearchChange(tag.name)">
+            <mat-option *ngFor="let tag of filteredTag | async" [value]="tag.name">
               {{tag.name}}
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
       </form>
     </div>
-    <div class="col-3 d-flex justify-content-start">
+    <div class="col-3 d-flex justify-content-start align-items-center">
       <div class="search-box-icon-update">
         <p>!</p>
       </div>
