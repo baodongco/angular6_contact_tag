@@ -1,7 +1,17 @@
 <div class="search-box container">
   <div class="row">
     <div class="col-9 search-box-input">
-      <input type="text" placeholder="Seach by Name, Company or #Tag" class="w-100" (input)="onSearchChange($event.target.value)">
+      <form class="example-form">
+        <mat-form-field class="example-full-width">
+          <input type="text" placeholder="Seach by Name, Company or #Tag" class="w-100" 
+            matInput [formControl]="myControl" [matAutocomplete]="auto" autocomplete="disableAutocomplete">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let tag of tagData | async" [value]="tag.name" (optionSelected)="onSearchChange(tag.name)">
+              {{tag.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
     </div>
     <div class="col-3 d-flex justify-content-start">
       <div class="search-box-icon-update">
@@ -10,15 +20,15 @@
     </div>
   </div>
   <div class="row justify-content-end ">
-  <div class="col-3 message-container">
-    <div class="">
-      <div *ngFor="let alert of newTagData$" class="">
-        <div class="alert alert-success alert-dismissible" id="message" close="closeAlert()" dismiss-on-timeout="2000" data-dismiss="alert">
-          New Tag:
-          <strong>{{alert.name}}</strong>.
+    <div class="col-3 message-container">
+      <div class="">
+        <div *ngFor="let alert of newTagData$" class="">
+          <div class="alert alert-success alert-dismissible" id="message" close="closeAlert()" dismiss-on-timeout="2000" data-dismiss="alert">
+            New Tag:
+            <strong>{{alert.name}}</strong>.
+          </div>
         </div>
       </div>
-    </div>
     </div>
   </div>
 </div>

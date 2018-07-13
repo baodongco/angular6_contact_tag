@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-search-box',
@@ -15,17 +16,30 @@ export class SearchBoxComponent implements OnInit {
   tagData = [];
   newTagData$ = [];
   show = true;
+  myControl = new FormControl();
+  disableAutocomplete = true;
 
   constructor(private route: ActivatedRoute, private data: DataService) {
     this.data.returnbehaviorTagData().subscribe(contactTagData => this.tag$ = JSON.parse(JSON.stringify(contactTagData)));
-    this.tagData = data.getTags();
     this.data.getNewTagData().subscribe(newTagData => this.newTagData$ = newTagData);
+    this.data.getTags().subscribe(tagGot => this.tagData = tagGot);
   }
 
   ngOnInit() {
   }
 
   onSearchChange(searchString) {
-    this.data.searchByString(searchString);
+    if (searchString === '#') {
+      this.disableAutocomplete = false;
+      console.log('asfd ' + JSON.stringify(this.tagData));
+      // this.data.searchByString(searchString);
+    } else {
+
+      this.data.searchByString(searchString);
+    }
+  }
+
+  callSomeFunction() {
+
   }
 }

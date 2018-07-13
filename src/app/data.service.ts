@@ -421,7 +421,9 @@ export class DataService {
   }
 
   getTags() {
-    return this.TagData$;
+    this.currentTagObject = this.TagData$;
+    this.behaviorTagData.next(this.currentTagObject);
+    return this.behaviorTagData;
   }
 
   getContactTag() {
